@@ -9,21 +9,35 @@ import java.util.Objects;
 
 public class MenuConversor extends JFrame {
 
-    String[] listMonedas={"Elegir Moneda","ARS","AED", "AFN", "ALL", "AMD", "ANG", "AOA", "AUD", "AWG",
-                          "AZN", "BAM", "BBD", "BDT", "BGN", "BHD", "BIF", "BMD", "BND", "BOB", "BRL",
-                          "BSD", "BTN", "BWP", "BYN", "BZD", "CAD", "CDF", "CHF", "CLP", "CNY", "COP",
-                          "CRC", "CUP", "CVE", "CZK", "DJF", "DKK", "DOP", "DZD", "EGP", "ERN", "ETB",
-                          "EUR", "FJD", "FKP", "FOK", "GBP", "GEL", "GGP", "GHS", "GIP", "GMD", "GNF",
-                          "GTQ", "GYD", "HKD", "HNL", "HRK", "HTG", "HUF", "IDR", "ILS", "IMP", "INR",
-                          "IQD", "IRR", "ISK", "JEP", "JMD", "JOD", "JPY", "KES", "KGS", "KHR", "KID",
-                          "KMF", "KRW", "KWD", "KYD", "KZT", "LAK", "LBP", "LKR", "LRD", "LSL", "LYD",
-                          "MAD", "MDL", "MGA", "MKD", "MMK", "MNT", "MOP", "MRU", "MUR", "MVR", "MWK",
-                          "MXN", "MYR", "MZN", "NAD", "NGN", "NIO", "NOK", "NPR", "NZD", "OMR", "PAB",
-                          "PEN", "PGK", "PHP", "PKR", "PLN", "PYG", "QAR", "RON", "RSD", "RUB", "RWF",
-                          "SAR", "SBD", "SCR", "SDG", "SEK", "SGD", "SHP", "SLE", "SLL", "SOS", "SRD",
-                          "SSP", "STN", "SYP", "SZL", "THB", "TJS", "TMT", "TND", "TOP", "TRY", "TTD",
-                          "TVD", "TWD", "TZS", "UAH", "UGX", "USD", "UYU", "UZS", "VES", "VND", "VUV",
-                          "WST", "XAF", "XCD", "XDR", "XOF", "XPF", "YER", "ZAR", "ZMW", "ZWL"};
+    String[] listMonedas={"Elegir Moneda","ARS-Argentina","AED-Emiratos Á.Unidos","AFN-Afghanistan","ALL-Albania",
+                          "AMD-Armenia","ANG-Curazao","AOA-Angola","AUD-Australia","AWG-Aruba","AZN-Azerbaiyán",
+                          "BAM-BosniayHerzegovina","BBD-Barbados","BDT-Bangladesh","BGN-Bulgaria","BHD-Baréin",
+                          "BIF-Burundi","BMD-Bermudas","BND-Sultanato de Brunéi","BOB-Bolivia","BRL-Brazil","BSD-Bahamas",
+                          "BTN-Bután","BWP-Botsuana","BYN-Bielorrusia","BZD-Belice","CAD-Canadá","CDF-Congo","CHF-Suiza",
+                          "CLP-Chile","CNY-China","COP-Colombia","CRC-Costa Rica","CUP-Cuba","CVE-Rep.Cabo Verde",
+                          "CZK-Rep.Checa","DJF-Yibuti","DKK-Dinamarca","DOP-Rep. Dominicana","DZD-Argelia","EGP-Egipto",
+                          "ERN-Eritrea","ETB-Etiopía","EUR-Eurozona","FJD-Fiyi","FKP-Isl. Malvinas","FOK-Islas Feroe",
+                          "GBP-Reino Unido","GEL-Georgia","GGP-Guernsey","GHS-Ghana","GIP-Gibraltar","GMD-Gambia",
+                          "GNF-Guinea","GTQ-Guatemala","GYD-Guyana","HKD-Hong Kong","HNL-Honduras","HRK-Croacia",
+                          "HTG-Haití","HUF-Hungría","IDR-Indonesia","ILS-Israel","IMP-Isl. de Man","INR-India",
+                          "IQD-Irak","IRR-Irán","ISK-Islandia","JEP-Jersey","JMD-Jamaica","JOD-Jordania","JPY-Japón",
+                          "KES-kenia","KGS-Kirguistán","KHR-Camboya","KID-Kiribati","KMF-Isl. Comoras","KRW-Corea del Sur",
+                          "KWD-Kuwait","KYD-Isl. Caimán","KZT-Kazajistán","LAK-Laos","LBP-Líbano","LKR-Sri Lanka",
+                          "LRD-Rep. de Liberia","LSL-Lesoto","LYD-Libia","MAD-Marruecos","MDL-Moldavia","MGA-Madagascar",
+                          "MKD-Macedonia del Norte","MMK-Birmania","MNT-Mongolia","MOP-Macao","MRU-Mauritania",
+                          "MUR-Mauricio","MVR-Maldivas","MWK-Malaui","MXN-México","MYR-Malasia","MZN-Mozambique",
+                          "NAD-Namibia","NGN-Nigeria","NIO-Nicaragua","NOK-Noruega","NPR-Nepal","NZD-Nueva Zelanda",
+                          "OMR-Omán","PAB-Panamá","PEN-Perú","PGK-Papúa Nueva Guinea","PHP-Filipinas","PKR-Pakistán",
+                          "PLN-Polonia","PYG-Paraguay","QAR-Qatar","RON-Rumanía","RSD-Serbia","RUB-Rusia","RWF-Ruanda",
+                          "SAR-Arabia Saudí","SBD-Isl. Salomón","SCR-Seychelles","SDG-Sudán","SEK-Suecia","SGD-Singapur",
+                          "SHP-Isl. de Sta. Elena","SLE-Sierra Leona","SLL-Sierra Leona","SOS-Somalia","SRD-Surinam",
+                          "SSP-Sudán del Sur","STN-Sto. Tomé y Príncipe","SYP-Siria","SZL-Suazilandia","THB-Tailandia",
+                          "TJS-Tayikistán","TMT-Turkmenistán","TND-Túnez","TOP-Tonga","TRY-Turquia","TTD-Trinidad y Tobago",
+                          "TVD-Tuvalu","TWD-Taiwan","TZS-Tanzania","UAH-Ucrania","UGX-Uganda","USD-EE.UU.","UYU-Uruguay",
+                          "UZS-Uzbekistán","VES-Venezuela","VND-Vietnam","VUV-Vanuatu","WST-Samoa","XAF-África Central",
+                          "XCD-Caribe Oriental","XDR-Fmi","XOF-África Occidental","XPF-Francia-Pacífico","YER-Yemen",
+                          "ZAR-Sudáfrica","ZMW-Zambia","ZWL-Zimbabue"};
+
 
     JLabel cantidad = new JLabel();
     JLabel codBaseDe = new JLabel();
@@ -37,6 +51,7 @@ public class MenuConversor extends JFrame {
     JButton Salir = new JButton();
     double tasaConversion;
     servicioConversion serv=new servicioConversion();
+
     @Serial
     private static final long serialVersionUID = 0;
 
@@ -80,8 +95,10 @@ public class MenuConversor extends JFrame {
         ActionListener accionD = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String codBaseDe = Objects.requireNonNull(codigoBaseDe.getSelectedItem()).toString();
-                System.out.println(codBaseDe);
+                String codBDE= Objects.requireNonNull(codigoBaseDe.getSelectedItem()).toString();
+                String codigoBaseDe=codBDE.substring(0,3);
+                System.out.println(codBDE);
+                System.out.println(codigoBaseDe);
             }
         };
         codigoBaseDe.addActionListener(accionD);
@@ -91,8 +108,11 @@ public class MenuConversor extends JFrame {
         ActionListener accionA = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String codBaseDe = Objects.requireNonNull(codigoBaseDe.getSelectedItem()).toString();
-                String codBaseA = Objects.requireNonNull(codigoBaseA.getSelectedItem()).toString();
+                String codBDE = Objects.requireNonNull(codigoBaseDe.getSelectedItem()).toString();
+                String codBaseDe=codBDE.substring(0,3);
+                String codBA = Objects.requireNonNull(codigoBaseA.getSelectedItem()).toString();
+                String codBaseA=codBA.substring(0,3);
+                System.out.println(codBA);
                 System.out.println(codBaseA);
                 tasaConversion = serv.convertirMoneda(codBaseDe,codBaseA);
             }
