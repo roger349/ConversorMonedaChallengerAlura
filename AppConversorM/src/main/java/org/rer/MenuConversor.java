@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.Serial;
 import java.util.Objects;
 
@@ -81,7 +83,21 @@ public class MenuConversor extends JFrame {
         CantidadIngresada.setBounds(10, 40, 330,27);
         CantidadIngresada.setColumns(10);
         this.getContentPane().add(CantidadIngresada);
-
+        CantidadIngresada.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                char caracter = e.getKeyChar();
+                if (!Character.isLetter(caracter)) {
+                    double num = Double.parseDouble(CantidadIngresada.getText());
+                    if (num <= 0.00) {
+                            JOptionPane.showMessageDialog(null, "Ingrese un número mayor que cero.");
+                    }
+                }
+                else {
+                        JOptionPane.showMessageDialog(null, "Ingrese solo numeros");
+                    }
+            }
+        });
         codBaseDe.setBounds(10, 80, 300,20);
         codBaseDe.setFont(new Font("Century-Gothic", Font.BOLD,12));
         codBaseDe.setText("De:");
@@ -132,11 +148,11 @@ public class MenuConversor extends JFrame {
         ActionListener convertir= new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                double CantIngresada = Double.parseDouble(CantidadIngresada.getText());
-                double ResultadoConversion=CantIngresada*tasaConversion;
-                Resultado.setText(String.valueOf(ResultadoConversion));
+                 double CantIngresada = Double.parseDouble(CantidadIngresada.getText());
+                 double ResultadoConversion = CantIngresada * tasaConversion;
+                 Resultado.setText(String.valueOf(ResultadoConversion));
             }
-        };
+        } ;
         Convertir.addActionListener(convertir);
         Convertir.setText("Convertir");
         Convertir.setBounds(47, 220, 104, 23);
