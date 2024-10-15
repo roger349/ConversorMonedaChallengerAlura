@@ -40,6 +40,8 @@ public class MenuConversor extends JFrame {
                           "XCD-Caribe Oriental","XDR-Fmi","XOF-África Occidental","XPF-Francia-Pacífico","YER-Yemen",
                           "ZAR-Sudáfrica","ZMW-Zambia","ZWL-Zimbabue"};
 
+    String[] listMonedas1={"Elegir Moneda","ARS-Peso argentino","BOB-Boliviano boliviano","BRL-Real brasileño"
+                          ,"CLP-Peso chileno","COP-Peso colombiano","USD-Dólar E.E.U.U."};
 
     JLabel cantidad = new JLabel();
     JLabel codBaseDe = new JLabel();
@@ -47,12 +49,13 @@ public class MenuConversor extends JFrame {
     JLabel resultadoLabel = new JLabel();
     JTextField CantidadIngresada=new JTextField();
     JTextField Resultado=new JTextField();
-    JComboBox<String> codigoBaseDe = new JComboBox<>(listMonedas);
-    JComboBox<String> codigoBaseA = new JComboBox<>(listMonedas);
+    JComboBox<String> codigoBaseDe = new JComboBox<>(listMonedas1);
+    JComboBox<String> codigoBaseA = new JComboBox<>(listMonedas1);
     JButton Convertir = new JButton();
     JButton Salir = new JButton();
     double tasaConversion;
     servicioConversion serv=new servicioConversion();
+    String monedaDA="";
 
     @Serial
     private static final long serialVersionUID = 0;
@@ -65,7 +68,7 @@ public class MenuConversor extends JFrame {
     public MenuConversor() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Menu Conversor");
-        this.setBounds(500, 240, 400, 350);
+        this.setBounds(500, 240, 390, 320);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.componentesMenu();
@@ -98,43 +101,41 @@ public class MenuConversor extends JFrame {
                     }
             }
         });
-        codBaseDe.setBounds(10, 80, 300,20);
+        codBaseDe.setBounds(10, 80, 305,20);
         codBaseDe.setFont(new Font("Century-Gothic", Font.BOLD,12));
-        codBaseDe.setText("De:");
+        codBaseDe.setText("Moneda Origen:");
         this.getContentPane().add(codBaseDe);
 
-        codBaseA.setBounds(180, 80, 300,20);
+        codBaseA.setBounds(180, 80, 305,20);
         codBaseA.setFont(new Font("Century-Gothic", Font.BOLD,12));
-        codBaseA.setText("a:");
+        codBaseA.setText("Moneda Destino:");
         this.getContentPane().add(codBaseA);
 
-        ActionListener accionD = new ActionListener() {
+        ActionListener accionOrigen = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String codBDE= Objects.requireNonNull(codigoBaseDe.getSelectedItem()).toString();
-                String codigoBaseDe=codBDE.substring(0,3);
-                System.out.println(codBDE);
-                System.out.println(codigoBaseDe);
+                String codigoBaseOrigen=codBDE.substring(0,3);
+                System.out.println(codigoBaseOrigen);
+                serv.convertirMoneda(codigoBaseOrigen);
+
             }
         };
-        codigoBaseDe.addActionListener(accionD);
-        codigoBaseDe.setBounds(25, 110, 145, 21);
+        codigoBaseDe.addActionListener(accionOrigen);
+        codigoBaseDe.setBounds(10, 110, 145, 21);
         this.getContentPane().add(codigoBaseDe);
 
-        ActionListener accionA = new ActionListener() {
+        ActionListener accionDestino = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String codBDE = Objects.requireNonNull(codigoBaseDe.getSelectedItem()).toString();
-                String codBaseDe=codBDE.substring(0,3);
                 String codBA = Objects.requireNonNull(codigoBaseA.getSelectedItem()).toString();
-                String codBaseA=codBA.substring(0,3);
-                System.out.println(codBA);
-                System.out.println(codBaseA);
-                tasaConversion = serv.convertirMoneda(codBaseDe,codBaseA);
+                String codigoBaseDestino = codBA.substring(0, 3);
+                tasaConversion = serv.obtenerTasaConversion(codigoBaseDestino);
+                System.out.println(codigoBaseDestino);
             }
         };
-        codigoBaseA.addActionListener(accionA);
-        codigoBaseA.setBounds(190, 110, 145, 21);
+        codigoBaseA.addActionListener(accionDestino);
+        codigoBaseA.setBounds(180, 110, 145, 21);
         this.getContentPane().add(codigoBaseA);
 
         resultadoLabel.setBounds(10,147, 300,20);
@@ -148,9 +149,22 @@ public class MenuConversor extends JFrame {
         ActionListener convertir= new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                 double CantIngresada = Double.parseDouble(CantidadIngresada.getText());
-                 double ResultadoConversion = CantIngresada * tasaConversion;
-                 Resultado.setText(String.valueOf(ResultadoConversion));
+                double CantIngresada = Double.parseDouble(CantidadIngresada.getText());
+                String codBA = Objects.requireNonNull(codigoBaseA.getSelectedItem()).toString();
+                String codigoBaseDestino = codBA.substring(0, 3);
+                if (monedaDA.equals(codigoBaseDestino)) {
+                        tasaConversion = serv.obtenerTasaConversion(monedaDA);
+                        double ResultadoConversion = CantIngresada * tasaConversion;
+                        Resultado.setText(String.valueOf(ResultadoConversion));
+                } else {
+
+                        double ResultadoConversion = CantIngresada * tasaConversion;
+                        Resultado.setText(String.valueOf(ResultadoConversion));
+                        String monedaDestinoA=(String) codigoBaseA.getSelectedItem();
+                        monedaDA =monedaDestinoA.substring(0, 3);
+                        System.out.println(monedaDA);
+                }
+
             }
         } ;
         Convertir.addActionListener(convertir);
@@ -169,4 +183,5 @@ public class MenuConversor extends JFrame {
         Salir.setBounds(187, 220, 104, 23);
         this.getContentPane().add(Salir);
     }
+
 }
