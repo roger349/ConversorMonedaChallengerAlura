@@ -7,9 +7,38 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.Serial;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Objects;
 
 public class MenuConversor extends JFrame {
+
+    public static Connection conectarBD(){
+        Connection conexion;
+        //String HOST="bzfvgulv8wnbhgcgfecu-mysql.services.clever-cloud.com";
+        String DB="bzfvgulv8wnbhgcgfecu";
+        String USER="u93fob5hqfiijvwj";
+        String PASS="jIBwWg50rYxXlRYCQ8st";
+        String URL= "jdbc:mysql://bzfvgulv8wnbhgcgfecu-mysql.services.clever-cloud.com:3306/bzfvgulv8wnbhgcgfecu?user=u93fob5hqfiijvwj&password=jIBwWg50rYxXlRYCQ8st";
+
+        System.out.println("....conectando");
+
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            conexion= DriverManager.getConnection(URL,USER,PASS);
+            System.out.println("conexion aceptada");
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
+        }
+        catch (ClassNotFoundException e) {
+            System.out.println("Driver MySQL no encontrado: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+        return conexion;
+    }
 
     String[] listMonedas={"Elegir Moneda","ARS-Argentina","AED-Emiratos Á.Unidos","AFN-Afghanistan","ALL-Albania",
                           "AMD-Armenia","ANG-Curazao","AOA-Angola","AUD-Australia","AWG-Aruba","AZN-Azerbaiyán",
@@ -61,6 +90,7 @@ public class MenuConversor extends JFrame {
     private static final long serialVersionUID = 0;
 
     public static void main(String[] args) {
+        Connection BD=conectarBD();
         MenuConversor  menuConversor=new MenuConversor();
     }
     //Constructor
