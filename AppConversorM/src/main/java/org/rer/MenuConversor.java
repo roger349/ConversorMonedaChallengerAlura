@@ -7,38 +7,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.Serial;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class MenuConversor extends JFrame {
 
-    public static Connection conectarBD(){
-        Connection conexion;
-        //String HOST="bzfvgulv8wnbhgcgfecu-mysql.services.clever-cloud.com";
-        String DB="bzfvgulv8wnbhgcgfecu";
-        String USER="u93fob5hqfiijvwj";
-        String PASS="jIBwWg50rYxXlRYCQ8st";
-        String URL= "jdbc:mysql://bzfvgulv8wnbhgcgfecu-mysql.services.clever-cloud.com:3306/bzfvgulv8wnbhgcgfecu?user=u93fob5hqfiijvwj&password=jIBwWg50rYxXlRYCQ8st";
-
-        System.out.println("....conectando");
-
-        try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conexion= DriverManager.getConnection(URL,USER,PASS);
-            System.out.println("conexion aceptada");
-        }
-        catch (SQLException e) {
-            System.out.println(e.getMessage());
-            throw new RuntimeException(e);
-        }
-        catch (ClassNotFoundException e) {
-            System.out.println("Driver MySQL no encontrado: " + e.getMessage());
-            throw new RuntimeException(e);
-        }
-        return conexion;
-    }
 
     String[] listMonedas={"Elegir Moneda","ARS-Argentina","AED-Emiratos Á.Unidos","AFN-Afghanistan","ALL-Albania",
                           "AMD-Armenia","ANG-Curazao","AOA-Angola","AUD-Australia","AWG-Aruba","AZN-Azerbaiyán",
@@ -84,13 +57,18 @@ public class MenuConversor extends JFrame {
     JButton Salir = new JButton();
     double tasaConversion;
     servicioConversion serv=new servicioConversion();
+    serviciosBD servBD=new serviciosBD();
+    String codigoBaseOrigen;
+    String codigoBaseDestino;
     String monedaDA="";
+    Double ResultadoConversion;
+    ArrayList<Historial_de_Conversiones> listH=new ArrayList<>();
 
     @Serial
     private static final long serialVersionUID = 0;
 
     public static void main(String[] args) {
-        Connection BD=conectarBD();
+
         MenuConversor  menuConversor=new MenuConversor();
     }
     //Constructor
@@ -109,7 +87,7 @@ public class MenuConversor extends JFrame {
     public void componentesMenu() {
 
         cantidad.setBounds(10, 10, 300,20);
-        cantidad.setFont(new Font("Century-Gothic",1,12));
+        cantidad.setFont(new Font("Century-Gothic", Font.BOLD,12));
         cantidad.setText("Ingrese la Cantidad a Convertir");
         this.getContentPane().add(cantidad);
 
@@ -145,7 +123,7 @@ public class MenuConversor extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String codBDE= Objects.requireNonNull(codigoBaseDe.getSelectedItem()).toString();
-                String codigoBaseOrigen=codBDE.substring(0,3);
+                codigoBaseOrigen=codBDE.substring(0,3);
                 System.out.println(codigoBaseOrigen);
                 serv.convertirMoneda(codigoBaseOrigen);
 
@@ -159,7 +137,7 @@ public class MenuConversor extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String codBA = Objects.requireNonNull(codigoBaseA.getSelectedItem()).toString();
-                String codigoBaseDestino = codBA.substring(0, 3);
+                codigoBaseDestino = codBA.substring(0, 3);
                 tasaConversion = serv.obtenerTasaConversion(codigoBaseDestino);
                 System.out.println(codigoBaseDestino);
             }
@@ -179,22 +157,24 @@ public class MenuConversor extends JFrame {
         ActionListener convertir= new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                double CantIngresada = Double.parseDouble(CantidadIngresada.getText());
+                Double CantIngresada = Double.parseDouble(CantidadIngresada.getText());
                 String codBA = Objects.requireNonNull(codigoBaseA.getSelectedItem()).toString();
-                String codigoBaseDestino = codBA.substring(0, 3);
+                codigoBaseDestino = codBA.substring(0, 3);
                 if (monedaDA.equals(codigoBaseDestino)) {
                         tasaConversion = serv.obtenerTasaConversion(monedaDA);
-                        double ResultadoConversion = CantIngresada * tasaConversion;
+                        ResultadoConversion = CantIngresada * tasaConversion;
                         Resultado.setText(String.valueOf(ResultadoConversion));
                 } else {
-
-                        double ResultadoConversion = CantIngresada * tasaConversion;
+                        ResultadoConversion = CantIngresada * tasaConversion;
                         Resultado.setText(String.valueOf(ResultadoConversion));
                         String monedaDestinoA=(String) codigoBaseA.getSelectedItem();
                         monedaDA =monedaDestinoA.substring(0, 3);
                         System.out.println(monedaDA);
                 }
-
+                Historial_de_Conversiones hc=new Historial_de_Conversiones("coorreo@gmail.com",
+                     CantIngresada,codigoBaseOrigen,codigoBaseDestino,ResultadoConversion,"20/2/2024");
+            servBD.insertarDatos(hc);
+            listH.add(hc);
             }
         } ;
         Convertir.addActionListener(convertir);
@@ -204,7 +184,16 @@ public class MenuConversor extends JFrame {
 
         ActionListener salir=new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e){
+
+                for (int i = 0; i < listH.size(); i++) {
+                    System.out.println("correo electronico: " + listH.get(i).getCorreo_electronico() + " " +
+                                       "cantidad ingresada: " + listH.get(i).getCantidad_ingresada() + " " +
+                                       "Moneda de origen: " + listH.get(i).getMoneda_origen()        + " " +
+                                       "Moneda de destino: " + listH.get(i).getMoneda_destino()      + " " +
+                                       "resultado de conversion: " + listH.get(i).getResultado_conversion()  + " " +
+                                       "fecha de conversion: " + listH.get(i).getFecha_de_conversion());
+                }
                 System.exit(WIDTH);
             }
         };

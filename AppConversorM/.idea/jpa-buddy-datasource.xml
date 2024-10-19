@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpbDataSourceConfig">
+    <data-sources>
+      <data-source id="d0ab234f-4740-4e21-90db-06abcf609b18" name="AppConversorM" url="jdbc:mysql://localhost/AppConversorM?useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=UTC" driverClass="com.mysql.cj.jdbc.Driver" />
+      <data-source id="6a13762c-7638-4149-8b12-546f34dc6346" name="bzfvgulv8wnbhgcgfecu" url="jdbc:mysql://u93fob5hqfiijvwj:jIBwWg50rYxXlRYCQ8st@bzfvgulv8wnbhgcgfecu-mysql.services.clever-cloud.com:3306/bzfvgulv8wnbhgcgfecu?useSSL=false&amp;allowMultiQueries=true&amp;serverTimezone=UTC" driverClass="com.mysql.cj.jdbc.Driver" />
+    </data-sources>
+    <data-source-infos>
+      <data-source-info id="6a13762c-7638-4149-8b12-546f34dc6346" persistence-unit-name="AppConversorM" />
+    </data-source-infos>
+  </component>
+</project>

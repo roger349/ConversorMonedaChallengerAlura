@@ -1,8 +1,7 @@
 package org.rer;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDate;
+
 
 @Entity
 @Table(name="Historial_de_Conversiones")
@@ -13,19 +12,19 @@ public class Historial_de_Conversiones {
       @Column(name="Correo_Electronico")
       public String correo_electronico;
       @Column(name="Cantidad_Ingresada")
-      public BigDecimal cantidad_ingresada;
+      public Double cantidad_ingresada;
       @Column(name="Moneda_Origen")
       public String moneda_origen;
       @Column(name="Moneda_Destino")
       public String moneda_destino;
       @Column(name="Resultado_Conversion")
-      public BigDecimal resultado_conversion;
+      public Double resultado_conversion;
       @Column(name="Fecha_de_Conversion")
-      public LocalDate fecha_de_conversion;
+      public String fecha_de_conversion;
     // Constructor
-    public Historial_de_Conversiones(String correo_electronico, BigDecimal cantidad_ingresada,
-                                     String moneda_origen, String moneda_destino, BigDecimal resultado_conversion,
-                                     LocalDate fecha_de_conversion) {
+    public Historial_de_Conversiones(String correo_electronico, Double cantidad_ingresada,
+                                     String moneda_origen, String moneda_destino, Double resultado_conversion,
+                                     String fecha_de_conversion) {
         this.correo_electronico = correo_electronico;
         this.cantidad_ingresada = cantidad_ingresada;
         this.moneda_origen = moneda_origen;
@@ -47,11 +46,11 @@ public class Historial_de_Conversiones {
         this.correo_electronico = correo_electronico;
     }
 
-    public BigDecimal getCantidad_ingresada() {
+    public Double getCantidad_ingresada() {
         return cantidad_ingresada;
     }
 
-    public void setCantidad_ingresada(BigDecimal cantidad_ingresada) {
+    public void setCantidad_ingresada(Double cantidad_ingresada) {
         this.cantidad_ingresada = cantidad_ingresada;
     }
 
@@ -71,19 +70,19 @@ public class Historial_de_Conversiones {
         this.moneda_destino = moneda_destino;
     }
 
-    public BigDecimal getResultado_conversion() {
+    public Double getResultado_conversion() {
         return resultado_conversion;
     }
 
-    public void setResultado_conversion(BigDecimal resultado_conversion) {
+    public void setResultado_conversion(Double resultado_conversion) {
         this.resultado_conversion = resultado_conversion;
     }
 
-    public LocalDate getFecha_de_conversion() {
+    public String getFecha_de_conversion() {
         return fecha_de_conversion;
     }
 
-    public void setFecha_de_conversion(LocalDate fecha_de_conversion) {
+    public void setFecha_de_conversion(String fecha_de_conversion) {
         this.fecha_de_conversion = fecha_de_conversion;
     }
 }
