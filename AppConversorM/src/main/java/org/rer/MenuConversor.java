@@ -7,11 +7,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.Serial;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class MenuConversor extends JFrame {
-
 
     String[] listMonedas={"Elegir Moneda","ARS-Argentina","AED-Emiratos Á.Unidos","AFN-Afghanistan","ALL-Albania",
                           "AMD-Armenia","ANG-Curazao","AOA-Angola","AUD-Australia","AWG-Aruba","AZN-Azerbaiyán",
@@ -44,7 +44,8 @@ public class MenuConversor extends JFrame {
 
     String[] listMonedas1={"Elegir Moneda","ARS-Peso argentino","BOB-Boliviano boliviano","BRL-Real brasileño"
                           ,"CLP-Peso chileno","COP-Peso colombiano","USD-Dólar E.E.U.U."};
-
+    JLabel ingresarC=new JLabel();
+    JTextField correo=new JTextField();
     JLabel cantidad = new JLabel();
     JLabel codBaseDe = new JLabel();
     JLabel codBaseA = new JLabel();
@@ -55,9 +56,9 @@ public class MenuConversor extends JFrame {
     JComboBox<String> codigoBaseA = new JComboBox<>(listMonedas1);
     JButton Convertir = new JButton();
     JButton Salir = new JButton();
+    JButton Historial=new JButton();
     double tasaConversion;
     servicioConversion serv=new servicioConversion();
-    serviciosBD servBD=new serviciosBD();
     String codigoBaseOrigen;
     String codigoBaseDestino;
     String monedaDA="";
@@ -70,13 +71,13 @@ public class MenuConversor extends JFrame {
     public static void main(String[] args) {
 
         MenuConversor  menuConversor=new MenuConversor();
+
     }
     //Constructor
-
     public MenuConversor() {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle("Menu Conversor");
-        this.setBounds(500, 240, 390, 320);
+        this.setBounds(500, 240, 400, 320);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
         this.componentesMenu();
@@ -86,12 +87,22 @@ public class MenuConversor extends JFrame {
 
     public void componentesMenu() {
 
-        cantidad.setBounds(10, 10, 300,20);
+        ingresarC.setBounds(10, 10, 400,20);
+        ingresarC.setFont(new Font("Century-Gothic", Font.BOLD,11));
+        ingresarC.setText("Ingrese su Correo para guardar un Historial de sus conversiones");
+        this.getContentPane().add(ingresarC);
+
+        correo.setBounds(10, 35, 328,24);
+        correo.setFont(new Font("Century-Gothic", Font.BOLD,12));
+        this.getContentPane().add(correo);
+
+
+        cantidad.setBounds(10, 65, 328,24);
         cantidad.setFont(new Font("Century-Gothic", Font.BOLD,12));
         cantidad.setText("Ingrese la Cantidad a Convertir");
         this.getContentPane().add(cantidad);
 
-        CantidadIngresada.setBounds(10, 40, 330,27);
+        CantidadIngresada.setBounds(10, 90, 328,24);
         CantidadIngresada.setColumns(10);
         this.getContentPane().add(CantidadIngresada);
         CantidadIngresada.addKeyListener(new KeyAdapter() {
@@ -109,12 +120,12 @@ public class MenuConversor extends JFrame {
                     }
             }
         });
-        codBaseDe.setBounds(10, 80, 305,20);
+        codBaseDe.setBounds(10, 120, 305,20);
         codBaseDe.setFont(new Font("Century-Gothic", Font.BOLD,12));
         codBaseDe.setText("Moneda Origen:");
         this.getContentPane().add(codBaseDe);
 
-        codBaseA.setBounds(180, 80, 305,20);
+        codBaseA.setBounds(180, 120, 305,20);
         codBaseA.setFont(new Font("Century-Gothic", Font.BOLD,12));
         codBaseA.setText("Moneda Destino:");
         this.getContentPane().add(codBaseA);
@@ -130,7 +141,7 @@ public class MenuConversor extends JFrame {
             }
         };
         codigoBaseDe.addActionListener(accionOrigen);
-        codigoBaseDe.setBounds(10, 110, 145, 21);
+        codigoBaseDe.setBounds(10, 145, 145, 21);
         this.getContentPane().add(codigoBaseDe);
 
         ActionListener accionDestino = new ActionListener() {
@@ -143,15 +154,15 @@ public class MenuConversor extends JFrame {
             }
         };
         codigoBaseA.addActionListener(accionDestino);
-        codigoBaseA.setBounds(180, 110, 145, 21);
+        codigoBaseA.setBounds(180, 145, 145, 21);
         this.getContentPane().add(codigoBaseA);
 
-        resultadoLabel.setBounds(10,147, 300,20);
+        resultadoLabel.setBounds(10,170, 300,24);
         resultadoLabel.setFont(new Font("Century-Gothic", Font.BOLD,12));
         resultadoLabel.setText("Resultado Conversion:");
         this.getContentPane().add(resultadoLabel);
 
-        Resultado.setBounds(10, 175, 330, 27);
+        Resultado.setBounds(10, 190, 328, 24);
         this.getContentPane().add(Resultado);
 
         ActionListener convertir= new ActionListener() {
@@ -171,15 +182,20 @@ public class MenuConversor extends JFrame {
                         monedaDA =monedaDestinoA.substring(0, 3);
                         System.out.println(monedaDA);
                 }
-                Historial_de_Conversiones hc=new Historial_de_Conversiones("coorreo@gmail.com",
-                     CantIngresada,codigoBaseOrigen,codigoBaseDestino,ResultadoConversion,"20/2/2024");
-            servBD.insertarDatos(hc);
-            listH.add(hc);
+                String correoE=correo.getText();
+                Historial_de_Conversiones hc=new Historial_de_Conversiones(correoE,CantIngresada,codigoBaseOrigen,codigoBaseDestino,ResultadoConversion,"20/2/2024");
+                try {
+                    DAO dao = new DAO();
+                    dao.insertarDatos(correoE,CantIngresada,codigoBaseOrigen,codigoBaseDestino,ResultadoConversion,"20/2/2024");
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                listH.add(hc);
             }
         } ;
         Convertir.addActionListener(convertir);
         Convertir.setText("Convertir");
-        Convertir.setBounds(47, 220, 104, 23);
+        Convertir.setBounds(10, 230, 95, 24);
         this.getContentPane().add(Convertir);
 
         ActionListener salir=new ActionListener() {
@@ -199,8 +215,18 @@ public class MenuConversor extends JFrame {
         };
         Salir.addActionListener(salir);
         Salir.setText("Salir");
-        Salir.setBounds(187, 220, 104, 23);
+        Salir.setBounds(125, 230, 95, 24);
         this.getContentPane().add(Salir);
-    }
 
+        ActionListener historial=new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+
+            }
+        };
+        Historial.addActionListener(historial);
+        Historial.setText("Historial");
+        Historial.setBounds(240, 230, 95, 24);
+        this.getContentPane().add(Historial);
+    }
 }

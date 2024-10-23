@@ -6,10 +6,8 @@ import javax.persistence.*;
 @Entity
 @Table(name="Historial_de_Conversiones")
 public class Historial_de_Conversiones {
-      @Id
-      @GeneratedValue(strategy = GenerationType.AUTO)
-      private long id;
-      @Column(name="Correo_Electronico")
+
+    @Column(name="Correo_Electronico")
       public String correo_electronico;
       @Column(name="Cantidad_Ingresada")
       public Double cantidad_ingresada;
@@ -22,9 +20,14 @@ public class Historial_de_Conversiones {
       @Column(name="Fecha_de_Conversion")
       public String fecha_de_conversion;
     // Constructor
+
+    public Historial_de_Conversiones() {
+    }
+
     public Historial_de_Conversiones(String correo_electronico, Double cantidad_ingresada,
                                      String moneda_origen, String moneda_destino, Double resultado_conversion,
                                      String fecha_de_conversion) {
+
         this.correo_electronico = correo_electronico;
         this.cantidad_ingresada = cantidad_ingresada;
         this.moneda_origen = moneda_origen;
@@ -34,9 +37,6 @@ public class Historial_de_Conversiones {
     }
 
     // Getters y setters
-    public Long getId() {
-        return id;
-    }
 
     public String getCorreo_electronico() {
         return correo_electronico;
