@@ -1,8 +1,6 @@
 package org.rer;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class DAO {
 
@@ -19,5 +17,31 @@ public class DAO {
         Ps.executeUpdate();
         conexion.close();
     }
+    public void mostrarHistorial(String correo) throws SQLException {
+        Connection conexion = conexionBD.obtenerConexion();
+        Statement st = conexion.createStatement();
+        ResultSet resultado = st.executeQuery("SELECT * FROM historial_de_conversiones");
 
+        System.out.println("Correo Electronico: " + correo + "\n");
+
+        String co;
+        int b = 0;
+        while (resultado.next()) {
+            co = resultado.getString("Correo_Electronico");
+            if (correo.equals(co)) {
+                Double ci = resultado.getDouble("Cantidad_Ingresada");
+                String mo = resultado.getString("Moneda_Origen");
+                String md = resultado.getString("Moneda_Destino");
+                Double rc = resultado.getDouble("Resultado_Conversion");
+                String fc = resultado.getString("Fecha_Conversion");
+                b = 1;
+                System.out.println("Cantidad Ingresada: " + ci + "; Moneda Origen: " + mo + "; Moneda Destino: " + md +
+                                   ";" + " Resultado Conversion: " + rc + "; Fecha Conversion: " + fc + "\n");
+            }
+        }
+        if (b == 0) {
+            System.out.println("Nose encontro Conversiones para el correo ingresado");
+        }
+        conexion.close();
+    }
 }
