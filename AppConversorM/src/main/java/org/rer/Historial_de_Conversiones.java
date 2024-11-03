@@ -1,24 +1,26 @@
 package org.rer;
 
-import javax.persistence.*;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Table(name="Historial_de_Conversiones")
 public class Historial_de_Conversiones {
 
     @Column(name="Correo_Electronico")
-      public String correo_electronico;
-      @Column(name="Cantidad_Ingresada")
-      public Double cantidad_ingresada;
-      @Column(name="Moneda_Origen")
-      public String moneda_origen;
-      @Column(name="Moneda_Destino")
-      public String moneda_destino;
-      @Column(name="Resultado_Conversion")
-      public Double resultado_conversion;
-      @Column(name="Fecha_de_Conversion")
-      public String fecha_de_conversion;
+    public String correo_electronico;
+    @Column(name="Cantidad_Ingresada")
+    public Double cantidad_ingresada;
+    @Column(name="Moneda_Origen")
+    public String moneda_origen;
+    @Column(name="Moneda_Destino")
+    public String moneda_destino;
+    @Column(name="Resultado_Conversion")
+    public Double resultado_conversion;
+    @Column(name="Fecha_Conversion")
+    public String fecha_conversion;
+
     // Constructor
 
     public Historial_de_Conversiones() {
@@ -33,7 +35,7 @@ public class Historial_de_Conversiones {
         this.moneda_origen = moneda_origen;
         this.moneda_destino = moneda_destino;
         this.resultado_conversion = resultado_conversion;
-        this.fecha_de_conversion = fecha_de_conversion;
+        this.fecha_conversion = fecha_de_conversion;
     }
 
     // Getters y setters
@@ -79,10 +81,10 @@ public class Historial_de_Conversiones {
     }
 
     public String getFecha_de_conversion() {
-        return fecha_de_conversion;
+        return fecha_conversion;
     }
 
     public void setFecha_de_conversion(String fecha_de_conversion) {
-        this.fecha_de_conversion = fecha_de_conversion;
+        this.fecha_conversion = fecha_de_conversion;
     }
 }

@@ -3,13 +3,14 @@ package org.rer;
 
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.Serial;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -57,8 +58,8 @@ public class MenuConversor extends JFrame {
     JTextField CantidadIngresada=new JTextField();
     JTextField Resultado=new JTextField();
     JTextField busquedaH=new JTextField();
-    JComboBox<String> codigoBaseDe = new JComboBox<>(listMonedas1);
-    JComboBox<String> codigoBaseA = new JComboBox<>(listMonedas1);
+    JComboBox<String> codigoBaseDe = new JComboBox<>(listMonedas);
+    JComboBox<String> codigoBaseA = new JComboBox<>(listMonedas);
     JButton Convertir = new JButton();
     JButton Salir = new JButton();
     JButton Historial=new JButton();
@@ -66,10 +67,10 @@ public class MenuConversor extends JFrame {
     servicioConversion serv=new servicioConversion();
     String codigoBaseOrigen;
     String codigoBaseDestino;
-    String monedaDA="";
+    String monedaDA= " ";
     Double ResultadoConversion;
     ArrayList<Historial_de_Conversiones> listH=new ArrayList<>();
-
+    String correoIngresado= " ";
     @Serial
     private static final long serialVersionUID = 0;
 
@@ -101,31 +102,55 @@ public class MenuConversor extends JFrame {
         correo.setFont(new Font("Century-Gothic", Font.BOLD,12));
         this.getContentPane().add(correo);
 
+        correo.addFocusListener(new FocusAdapter() {
+            public void focusLost(FocusEvent e) {
+                   String co = correo.getText();
+                   if (DatosBD.validarCorreo(co)) {
+                       JOptionPane.showMessageDialog(null, "Correo Valido");
+                       correoIngresado=co;
+                   } else {
+                       JOptionPane.showMessageDialog(null, "Ingrese un Correo Valido, " +
+                                                     "o las conversiones realizadas no se guardaran en el Historial");
+                   }
+                }
+        });
 
         cantidad.setBounds(10, 65, 328,24);
         cantidad.setFont(new Font("Century-Gothic", Font.BOLD,12));
         cantidad.setText("Ingrese la Cantidad a Convertir");
         this.getContentPane().add(cantidad);
 
+        CantidadIngresada.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                validarCampo();
+            }
+           public void removeUpdate(DocumentEvent e) {
+            }
+            public void changedUpdate(DocumentEvent e) {
+            }
+            private void validarCampo() {
+                String ci = CantidadIngresada.getText();
+                if (ci.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Debe ingresar un Numero",
+                                              "Error", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    try {
+                        Double num = Double.parseDouble(ci);
+                        if (num <= 0) {
+                            JOptionPane.showMessageDialog(null, "Debe ingresar un numero mayor que cero",
+                                                      "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "Ingrese un número válido",
+                                                 "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
         CantidadIngresada.setBounds(10, 90, 328,24);
         CantidadIngresada.setColumns(10);
         this.getContentPane().add(CantidadIngresada);
 
-        CantidadIngresada.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent e) {
-                char caracter = e.getKeyChar();
-                if (!Character.isLetter(caracter)) {
-                    double num = Double.parseDouble(CantidadIngresada.getText());
-                    if (num <= 0.00) {
-                            JOptionPane.showMessageDialog(null, "Ingrese un número mayor que cero.");
-                    }
-                }
-                else {
-                        JOptionPane.showMessageDialog(null, "Ingrese solo numeros");
-                    }
-            }
-        });
         codBaseDe.setBounds(10, 120, 305,20);
         codBaseDe.setFont(new Font("Century-Gothic", Font.BOLD,12));
         codBaseDe.setText("Moneda Origen:");
@@ -151,7 +176,6 @@ public class MenuConversor extends JFrame {
         this.getContentPane().add(codigoBaseDe);
 
         ActionListener accionDestino = new ActionListener() {
-
             public void actionPerformed(ActionEvent e) {
                 String codBA = Objects.requireNonNull(codigoBaseA.getSelectedItem()).toString();
                 codigoBaseDestino = codBA.substring(0, 3);
@@ -188,15 +212,21 @@ public class MenuConversor extends JFrame {
                         monedaDA =monedaDestinoA.substring(0, 3);
                         System.out.println(monedaDA);
                 }
-                String correoE=correo.getText();
-                Historial_de_Conversiones hc=new Historial_de_Conversiones(correoE,CantIngresada,codigoBaseOrigen,codigoBaseDestino,ResultadoConversion,"20/2/2024");
-                try {
-                    DAO dao = new DAO();
-                    dao.insertarDatos(correoE,CantIngresada,codigoBaseOrigen,codigoBaseDestino,ResultadoConversion,"20/2/2024");
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
+                String correoE = correo.getText();
+                if (correoE.equals(correoIngresado)) {
+                    DateTimeFormatter formatoDate = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+                    String fechaConversion = LocalDate.now().format(formatoDate).toString();
+                    Historial_de_Conversiones hc = new Historial_de_Conversiones(correoE, CantIngresada, codigoBaseOrigen,
+                            codigoBaseDestino, ResultadoConversion, fechaConversion);
+                    try {
+                        DatosBD datosB = new DatosBD();
+                        datosB.insertarDatos(correoE, CantIngresada, codigoBaseOrigen, codigoBaseDestino,
+                                ResultadoConversion, fechaConversion);
+                        listH.add(hc);
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
                 }
-                listH.add(hc);
             }
         } ;
         Convertir.addActionListener(convertir);
@@ -216,7 +246,7 @@ public class MenuConversor extends JFrame {
         ActionListener mostrarHistorial=new ActionListener() {
 
             public void actionPerformed(ActionEvent e){
-                DAO dao=new DAO();
+                DatosBD dao=new DatosBD();
                 String Correo=busquedaH.getText();
                 try {
                     dao.mostrarHistorial(Correo);
