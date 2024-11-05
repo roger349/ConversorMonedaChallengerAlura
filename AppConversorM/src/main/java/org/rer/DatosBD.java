@@ -34,6 +34,7 @@ public class DatosBD extends JFrame{
         int b = 0;
         while (resultado.next()) {
             co = resultado.getString("Correo_Electronico");
+
             if (correo.equals(co)) {
 
                 Double ci = resultado.getDouble("Cantidad_Ingresada");

@@ -104,11 +104,14 @@ public class MenuConversor extends JFrame {
 
         correo.addFocusListener(new FocusAdapter() {
             public void focusLost(FocusEvent e) {
+
                    String co = correo.getText();
                    if (DatosBD.validarCorreo(co)) {
-                       JOptionPane.showMessageDialog(null, "Correo Valido");
+                       /*JOptionPane.showMessageDialog(null, "Correo Valido");*/
+                       limpiarResultado();
                        correoIngresado=co;
                    } else {
+                       limpiarResultado();
                        JOptionPane.showMessageDialog(null, "Ingrese un Correo Valido, " +
                                                      "o las conversiones realizadas no se guardaran en el Historial");
                    }
@@ -129,6 +132,7 @@ public class MenuConversor extends JFrame {
             public void changedUpdate(DocumentEvent e) {
             }
             private void validarCampo() {
+                limpiarResultado();
                 String ci = CantidadIngresada.getText();
                 if (ci.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Debe ingresar un Numero",
@@ -164,6 +168,7 @@ public class MenuConversor extends JFrame {
         ActionListener accionOrigen = new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
+                Resultado.setText("");
                 String codBDE= Objects.requireNonNull(codigoBaseDe.getSelectedItem()).toString();
                 codigoBaseOrigen=codBDE.substring(0,3);
                 System.out.println(codigoBaseOrigen);
@@ -177,6 +182,7 @@ public class MenuConversor extends JFrame {
 
         ActionListener accionDestino = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                Resultado.setText("");
                 String codBA = Objects.requireNonNull(codigoBaseA.getSelectedItem()).toString();
                 codigoBaseDestino = codBA.substring(0, 3);
                 tasaConversion = serv.obtenerTasaConversion(codigoBaseDestino);
@@ -250,6 +256,7 @@ public class MenuConversor extends JFrame {
                 String Correo=busquedaH.getText();
                 try {
                     dao.mostrarHistorial(Correo);
+                    busquedaH.setText(" ");
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }
@@ -271,7 +278,7 @@ public class MenuConversor extends JFrame {
                             "Moneda de origen: " + listH.get(i).getMoneda_origen()        + " " +
                             "Moneda de destino: " + listH.get(i).getMoneda_destino()      + " " +
                             "resultado de conversion: " + listH.get(i).getResultado_conversion()  + " " +
-                            "fecha de conversion: " + listH.get(i).getFecha_de_conversion());
+                            "fecha de conversion: " + listH.get(i).getFecha_conversion());
                 }
                 System.exit(WIDTH);
             }
@@ -280,5 +287,8 @@ public class MenuConversor extends JFrame {
         Salir.setText("Salir");
         Salir.setBounds(190, 320, 95, 24);
         this.getContentPane().add(Salir);
+    }
+    public void limpiarResultado(){
+          Resultado.setText("");
     }
 }

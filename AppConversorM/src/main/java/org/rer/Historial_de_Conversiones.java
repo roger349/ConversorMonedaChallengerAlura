@@ -1,24 +1,12 @@
 package org.rer;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
-@Entity
-@Table(name="Historial_de_Conversiones")
 public class Historial_de_Conversiones {
 
-    @Column(name="Correo_Electronico")
     public String correo_electronico;
-    @Column(name="Cantidad_Ingresada")
     public Double cantidad_ingresada;
-    @Column(name="Moneda_Origen")
     public String moneda_origen;
-    @Column(name="Moneda_Destino")
     public String moneda_destino;
-    @Column(name="Resultado_Conversion")
     public Double resultado_conversion;
-    @Column(name="Fecha_Conversion")
     public String fecha_conversion;
 
     // Constructor
@@ -28,14 +16,14 @@ public class Historial_de_Conversiones {
 
     public Historial_de_Conversiones(String correo_electronico, Double cantidad_ingresada,
                                      String moneda_origen, String moneda_destino, Double resultado_conversion,
-                                     String fecha_de_conversion) {
+                                     String fecha_conversion) {
 
         this.correo_electronico = correo_electronico;
         this.cantidad_ingresada = cantidad_ingresada;
         this.moneda_origen = moneda_origen;
         this.moneda_destino = moneda_destino;
         this.resultado_conversion = resultado_conversion;
-        this.fecha_conversion = fecha_de_conversion;
+        this.fecha_conversion = fecha_conversion;
     }
 
     // Getters y setters
@@ -79,12 +67,11 @@ public class Historial_de_Conversiones {
     public void setResultado_conversion(Double resultado_conversion) {
         this.resultado_conversion = resultado_conversion;
     }
-
-    public String getFecha_de_conversion() {
+    public String getFecha_conversion() {
         return fecha_conversion;
     }
 
-    public void setFecha_de_conversion(String fecha_de_conversion) {
-        this.fecha_conversion = fecha_de_conversion;
+    public void setFecha_conversion(String fecha_conversion) {
+        this.fecha_conversion = fecha_conversion;
     }
 }
